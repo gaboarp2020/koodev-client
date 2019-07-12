@@ -16,8 +16,15 @@
         <div class="pa-4">
           <v-card-text>
             <v-form>
-              <v-text-field prepend-icon="person" name="login" label="Login" type="text"></v-text-field>
               <v-text-field
+                v-model="form.username"
+                prepend-icon="person"
+                name="login"
+                label="Login"
+                type="text"
+              ></v-text-field>
+              <v-text-field
+                v-model="form.password"
                 prepend-icon="lock"
                 name="password"
                 label="Password"
@@ -38,8 +45,19 @@
 
 <script>
 export default {
-  name: 'LoginModal'
-}
+  name: "LoginModal",
+  apollo: {
+
+  },
+  data() {
+    return {
+      form: {
+        username: "",
+        password: ""
+      }
+    };
+  }
+};
 </script>
 
 <style lang="stylus" scoped></style>

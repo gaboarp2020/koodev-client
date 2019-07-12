@@ -8,26 +8,40 @@
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <div class="hidden-xs-only">
-        <span class="font-weight-light mr-2">Latest Release</span>
         <register-modal></register-modal>
         <login-modal></login-modal>
       </div>
-      <v-toolbar-side-icon class="hidden-sm-and-up"></v-toolbar-side-icon>
+      <v-menu offset-y>
+        <template v-slot:activator="{ on }">
+          
+          <v-toolbar-side-icon 
+          v-on="on"
+          class="hidden-sm-and-up"></v-toolbar-side-icon>
+        </template>
+        <v-list>
+          <v-list-tile>
+            <register-modal></register-modal>
+          </v-list-tile>
+          <v-list-tile>
+            <login-modal></login-modal>
+          </v-list-tile>
+        </v-list>
+      </v-menu>
     </v-toolbar>
   </div>
 </template>
 
 <script>
-import LoginModal from '@/components/LoginModal.vue'
-import RegisterModal from '@/components/RegisterModal.vue'
+import LoginModal from "@/components/LoginModal.vue";
+import RegisterModal from "@/components/RegisterModal.vue";
 
 export default {
-  name: 'Header',
+  name: "Header",
   components: {
     LoginModal,
     RegisterModal
   }
-}
+};
 </script>
 
 <style scoped>

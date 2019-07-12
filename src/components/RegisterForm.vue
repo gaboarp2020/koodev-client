@@ -35,7 +35,6 @@
               <v-text-field
                 v-model="firstname"
                 :rules="usernameRules"
-                :counter="6"
                 label="Username"
                 hint="At least 6 characters"
                 required

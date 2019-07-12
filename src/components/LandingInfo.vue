@@ -2,19 +2,19 @@
   <v-app>
     <section class="bg-grey">
       <v-container>
-        <v-layout justify-center align-center wrap>
+        <v-layout align-center justify-space-around fill-height wrap>
           <v-flex xs12 md6>
-            <v-card color="blue lighten-2" class="white--text">
+            <v-card color="blue lighten-2" class="white--text"  max-width="500">
               <v-card-title primary-title>
                 <div>
-                  <h1 text-sm-center class="display-2 font-weight-uppercase mb-3">Koodev Warehouse</h1>
+                  <div class="display-1 font-weight-uppercase ml-3">Koodev Warehouse</div>
                 </div>
               </v-card-title>
               <v-card-text>
-                <p class="display-1 font-weight-regular">
+                <p class="headline font-weight-regular">
                   <v-icon large text-sm-left color="blue darken-1">check</v-icon>Conoce los datos
                 </p>
-                <p class="display-1 font-weight-regular">
+                <p class="headline font-weight-regular">
                   <v-icon large text-sm-left color="blue darken-1">check</v-icon>Toma mejores decisiones
                 </p>
               </v-card-text>
@@ -24,7 +24,7 @@
             </v-card>
           </v-flex>
           <v-flex xs12 md6>
-            <v-img :src="require('../assets/2085405.jpg')" contain></v-img>
+            <v-img :src="require('../assets/2085405.jpg')" contain max-width="500"></v-img>
           </v-flex>
         </v-layout>
       </v-container>

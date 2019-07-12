@@ -5,7 +5,7 @@
           <v-flex blue darken-1 py-3 text-xs-center white--text xs12>
             <strong class="subheading">Koodev Warehouse</strong>
             <span> - Todos los derechos reservados</span>
-            &copy;2018
+            &copy; {{today}}
           </v-flex>
         </v-layout>
       </v-footer>
@@ -14,7 +14,12 @@
 
 <script>
 export default {
-  name: 'Footer'
+  name: 'Footer',
+  computed: {
+    today() {
+      return new Date().getFullYear()
+    }
+  }
 }
 </script>
 
