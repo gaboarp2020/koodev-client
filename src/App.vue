@@ -11,27 +11,26 @@
 </template>
 
 <script>
-import Header from "./components/Header.vue";
-import LandingInfo from "./components/LandingInfo.vue";
-import Footer from "@/components/Footer.vue";
+import Header from './components/Header.vue'
+import LandingInfo from './components/LandingInfo.vue'
+import Footer from '@/components/Footer.vue'
 
 export default {
-  name: "App",
+  name: 'App',
   components: {
     Header,
     LandingInfo,
     Footer
   },
-  data() {
-    return {};
+  data () {
+    return {}
   }
-};
+}
 </script>
 
-<style scoped>
-.footer {
-  margin-right: 10px;
-  min-height: 5vh;
+<style>
+
+html {
+  scroll-behavior: smooth;
 }
 </style>
-

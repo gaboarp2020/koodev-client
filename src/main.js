@@ -1,3 +1,4 @@
+import '@mdi/font/css/materialdesignicons.css'
 import Vue from 'vue'
 import './plugins/vuetify'
 import VueApollo from 'vue-apollo'
@@ -15,7 +16,7 @@ Vue.use(VueApollo)
 Vue.config.productionTip = false
 
 const apolloProvider = new VueApollo({
-  defaultClient: apolloClient,
+  defaultClient: apolloClient
 })
 
 new Vue({
