@@ -11,12 +11,13 @@
         <register-modal></register-modal>
         <login-modal></login-modal>
       </div>
-      <v-menu offset-y>
+      <v-menu
+        offset-y
+        button
+        transition="slide-y-transition"
+      >
         <template v-slot:activator="{ on }">
-          
-          <v-toolbar-side-icon 
-          v-on="on"
-          class="hidden-sm-and-up"></v-toolbar-side-icon>
+          <v-toolbar-side-icon v-on="on" class="hidden-sm-and-up"></v-toolbar-side-icon>
         </template>
         <v-list>
           <v-list-tile>
@@ -32,16 +33,16 @@
 </template>
 
 <script>
-import LoginModal from "@/components/LoginModal.vue";
-import RegisterModal from "@/components/RegisterModal.vue";
+import LoginModal from '@/components/LoginModal.vue'
+import RegisterModal from '@/components/RegisterModal.vue'
 
 export default {
-  name: "Header",
+  name: 'Header',
   components: {
     LoginModal,
     RegisterModal
   }
-};
+}
 </script>
 
 <style scoped>

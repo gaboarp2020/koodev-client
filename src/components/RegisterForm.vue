@@ -1,5 +1,5 @@
 <template>
-  <v-card color="white" class="ma-4 pa-4" width="500">
+  <v-card color="white" class="ma-4 pa-4" width="150%" min-width="280" max-width="500">
     <v-card-text>
       <v-form>
         <v-container>

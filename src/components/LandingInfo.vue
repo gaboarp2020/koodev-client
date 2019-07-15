@@ -2,8 +2,8 @@
   <v-app>
     <section class="bg-grey">
       <v-container>
-        <v-layout align-center justify-space-around fill-height wrap>
-          <v-flex xs12 md6>
+        <v-layout row align-center justify-space-around fill-height wrap>
+          <v-flex xs12 sm6>
             <v-card color="blue lighten-2" class="white--text"  max-width="500">
               <v-card-title primary-title>
                 <div>
@@ -23,7 +23,7 @@
               </v-card-actions>
             </v-card>
           </v-flex>
-          <v-flex xs12 md6>
+          <v-flex xs12 sm6>
             <v-img :src="require('../assets/2085405.jpg')" contain max-width="500"></v-img>
           </v-flex>
         </v-layout>
@@ -187,14 +187,14 @@
     <section class="bg-white">
       <v-container>
         <v-layout justify-center align-center wrap>
-          <v-flex md6>
+          <v-flex xs12 md6>
             <v-img :src="require('../assets/2085406.jpg')" contain></v-img>
             <div class="display-2 font-weight-light text-xs-center">
               Registrate
               <v-icon x-large color="black" class="material-icons">arrow_right_alt</v-icon>
             </div>
           </v-flex>
-          <v-layout justify-center align-center md6>
+          <v-layout justify-center align-center xs12 md6>
             <register-form></register-form>
           </v-layout>
         </v-layout>

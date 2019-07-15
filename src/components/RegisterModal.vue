@@ -120,6 +120,7 @@
 <script>
 import { validationMixin } from 'vuelidate'
 import { required, sameAs, minLength, maxLength, email } from 'vuelidate/lib/validators'
+import CREATE_USER_MUTATION from '../graphql/CreateUser.gql'
 
 export default {
   mixins: [validationMixin],
@@ -214,12 +215,18 @@ export default {
       !this.$v.repeatPassword.sameAsPassword && errors.push('Passwords must be identical.')
       !this.$v.repeatPassword.required && errors.push('Confirm the password')
       return errors
+    },
+    formValid () {
+      return !this.$v.$invalid
     }
   },
 
   methods: {
     submit () {
       this.$v.$touch()
+      if (this.formValid) {
+
+      }
     },
     clear () {
       this.$v.$reset()
