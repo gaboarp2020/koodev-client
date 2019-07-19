@@ -1,0 +1,9 @@
+mutation validateUser(
+    $username: String!, 
+    $password: String!
+  ) {
+  validateUser(
+    username: $username, 
+    password: $password
+  )
+}

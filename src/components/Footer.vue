@@ -16,7 +16,7 @@
 export default {
   name: 'Footer',
   computed: {
-    today() {
+    today () {
       return new Date().getFullYear()
     }
   }

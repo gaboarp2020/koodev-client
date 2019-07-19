@@ -1,13 +1,13 @@
 mutation createUser(
-  $firstName: String!
-  $lastName: String!
+  $firstname: String!
+  $lastname: String!
   $email: String!
   $username: String!
   $password: String!
 ) {
   createUser(
-    firstName: $firstName
-    lastName: $lastName
+    firstName: $firstname
+    lastName: $lastname
     email: $email
     username: $username
     password: $password

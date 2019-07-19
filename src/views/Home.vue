@@ -1,15 +1,13 @@
 <template>
   <div>
-    <login-modal />
+    <h1 v-if="false">Has iniciado sesión!</h1>
   </div>
 </template>
 
 <script>
-  import LoginModal from '@/components/LoginModal.vue'
 
-  export default {
-    components: {
-      LoginModal
-    }
-  }
+export default {
+  name: 'Home',
+  components: {}
+}
 </script>

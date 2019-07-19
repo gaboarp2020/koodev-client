@@ -1,0 +1,13 @@
+query me($id: Int!) {
+  me(id: $id) {
+    id
+    firstName
+    lastName
+    username
+    password
+    email
+    isAdmin
+    createdAt
+    updatedAt
+  }
+}
