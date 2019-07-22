@@ -1,26 +1,30 @@
 import '@mdi/font/css/materialdesignicons.css'
 import Vue from 'vue'
 import './plugins/vuetify'
-import VueApollo from 'vue-apollo'
 import App from './App.vue'
-import router from './router'
-import ApolloClient from 'apollo-boost'
+import { sync } from 'vuex-router-sync'
+import { createRouter } from './router'
+import { createStore } from './store'
 
-const apolloClient = new ApolloClient({
-  // You should use an absolute URL here
-  uri: 'http://localhost:4000/graphql'
-})
-
-Vue.use(VueApollo)
+/* eslint-disable no-new */
+// Vue Apollo
+import { createProvider } from './apollo'
 
 Vue.config.productionTip = false
 
-const apolloProvider = new VueApollo({
-  defaultClient: apolloClient
+const router = createRouter()
+const store = createStore()
+
+sync(store, router)
+
+// Apollo
+const apolloProvider = createProvider({}, {
+  router
 })
 
 new Vue({
   router,
+  store,
   apolloProvider,
-  render: h => h(App)
+  ...App
 }).$mount('#app')

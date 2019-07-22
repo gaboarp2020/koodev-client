@@ -2,17 +2,6 @@
   <v-dialog max-width="420" v-model="dialog">
     <v-btn outline color="primary" slot="activator">sign up</v-btn>
 
-    <span class="alert">
-      <v-alert
-        v-model="alerts.success.hasSucceed"
-        dismissible
-        type="success"
-        transition="scale-transition"
-      >
-        {{alerts.success.message}}
-      </v-alert>
-    </span>
-
     <div>
       <v-card>
         <v-toolbar dark color="primary">
@@ -167,16 +156,6 @@ export default {
           hasError: false
         }
       },
-      alerts: {
-        success: {
-          hasSucceed: false,
-          message: ''
-        },
-        error: {
-          hasError: false,
-          message: ''
-        }
-      },
       show1: false,
       show2: false,
       usernameRules: [
@@ -286,7 +265,7 @@ export default {
   },
 
   methods: {
-    createUser () {
+    async createUser () {
       this.$v.$touch()
       if (this.formValid) {
         const {
@@ -298,16 +277,17 @@ export default {
         } = this.$data.form
         this.clear()
 
-        this.$apollo
+        await this.$apollo
           .mutate({
             mutation: CREATE_USER_MUTATION,
             variables: { firstname, lastname, email, username, password }
           })
           .then(data => {
             // Result
-            this.alerts.success.hasSucceed = true
-            this.alerts.success.message = '¡Usuario registrado con éxito!'
+            this.$emit('success', true)
             this.dialog = false
+            // this.alerts.success.hasSucceed = true
+            // this.alerts.success.message = '¡Usuario registrado con éxito!'
           })
           .catch(error => {
             // Error
@@ -354,10 +334,4 @@ export default {
 </script>
 
 <style scoped>
-.alert {
-  position: fixed;
-  right: 4%;
-  top: 4%;
-  z-index: 9999
-}
 </style>

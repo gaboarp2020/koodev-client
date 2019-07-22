@@ -3,8 +3,7 @@
       <v-footer height="auto" color="blue darken-1">
         <v-layout justify-center row wrap>
           <v-flex blue darken-1 py-3 text-xs-center white--text xs12>
-            <strong class="subheading">Koodev Warehouse</strong>
-            <span> - Todos los derechos reservados</span>
+            <strong class="subheading">Koodev Warehouse </strong>
             &copy; {{today}}
           </v-flex>
         </v-layout>

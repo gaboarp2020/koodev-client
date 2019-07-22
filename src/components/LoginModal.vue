@@ -15,30 +15,33 @@
         </v-toolbar>
         <div class="pa-4">
           <v-card-text>
-            <v-form>
+            <v-form lazy-validation ref="form">
               <v-text-field
                 @keyup.enter="login"
                 v-model="form.username"
                 :rules="usernameRules"
+                required
                 prepend-icon="person"
-                name="login"
                 label="Login"
+                ref="username"
                 type="text"
               ></v-text-field>
               <v-text-field
                 @keyup.enter="login"
                 v-model="form.password"
+                :append-icon="show ? 'visibility' : 'visibility_off'"
                 :rules="passwordRules"
+                :type="show ? 'text' : 'password'"
+                required
+                @click:append="show = !show"
                 prepend-icon="lock"
-                name="password"
                 label="Password"
-                type="password"
               ></v-text-field>
             </v-form>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn color="primary" @click="login">Login</v-btn>
+            <v-btn :disabled="!valid" color="primary" @click="login" :loading="isLoading">Login</v-btn>
           </v-card-actions>
         </div>
       </v-card>
@@ -47,10 +50,11 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import VALIDATE_USER_MUTATION from '../graphql/ValidateUser.gql'
+import { onLogin } from '../apollo'
 
 export default {
-
   data () {
     return {
       valid: true,
@@ -68,67 +72,75 @@ export default {
           hasError: false
         }
       },
-      alerts: {
-        success: {
-          hasSucceed: false,
-          message: ''
-        },
-        error: {
-          hasError: false,
-          message: ''
-        }
-      },
-      show1: false,
+      show: false,
       usernameRules: [
-        v => !(this.graphQLErrors.username.hasError) || this.graphQLErrors.message
+        v => !!v || 'Falta el usuario',
+        v => !this.graphQLErrors.username.hasError || this.graphQLErrors.message
       ],
       passwordRules: [
-        v => !(this.graphQLErrors.password.hasError) || this.graphQLErrors.message
+        v => !!v || 'Falta la contraseña',
+        v => !this.graphQLErrors.password.hasError || this.graphQLErrors.message
       ]
     }
   },
-
+  computed: {
+    ...mapState([
+      'isLoading'
+    ])
+  },
   methods: {
     login () {
-      const {
-        username,
-        password
-      } = this.$data.form
+      if (this.$refs.form.validate()) {
+        this.$store.commit('loading')
+        this.loginValidationQuery()
+      }
+
+      this.graphQLErrors.username.hasError = false
+      this.graphQLErrors.password.hasError = false
+    },
+    loginValidationQuery () {
+      const { username, password } = this.$data.form
+
       this.clear()
 
+      // Apollo GraphQl Query
       this.$apollo
         .mutate({
           mutation: VALIDATE_USER_MUTATION,
           variables: { username, password }
         })
         .then(data => {
-        // // Result
-          console.log(data.data.validateUser)
-          let token = data.data.validateUser
-          localStorage.setItem('authorization', token)
+          // Result
+          onLogin()
+          this.$store.commit('done')
 
-          this.$emit('hasLogged')
-          console.log('Emitiendo...')
+          let token = data.data.validateUser
+          localStorage.setItem('Authorization', 'Bearer ' + token)
+
+          this.$store.commit('setToken', token)
+
+          this.$store.commit('login')
           this.dialog = false
-          this.$emit('logged', true)
+          this.$emit('logged')
           this.$router.push('/home')
         })
         .catch(error => {
-        // Error
+          // Error
 
+          this.$store.commit('done')
           if (error.graphQLErrors) {
             this.graphQLErrors.message = error.graphQLErrors[0].message
             if (error.graphQLErrors[0].message === 'Usuario incorrecto') {
-            // Usuario no existe
+              // Usuario no existe
               this.graphQLErrors.username.hasError = true
               this.graphQLErrors.password.hasError = false
             } else {
-            // El password no coincide
+              // El password no coincide
               this.graphQLErrors.password.hasError = true
               this.graphQLErrors.username.hasError = false
             }
           } else {
-          // Server Error
+            // Server Error
           }
           // We restore the initial user input
           this.$data.form = {
@@ -137,12 +149,17 @@ export default {
           }
         })
     },
-
     clear () {
       this.form.username = ''
       this.form.password = ''
       this.graphQLErrors.username.hasError = false
       this.graphQLErrors.password.hasError = false
+    }
+  },
+  watch: {
+    dialog: function () {
+      this.$refs.form.resetValidation()
+      this.$nextTick(() => this.$refs.username.focus())
     }
   }
 }
@@ -153,6 +170,6 @@ export default {
   position: fixed;
   right: 4%;
   top: 4%;
-  z-index: 9999
+  z-index: 9999;
 }
 </style>

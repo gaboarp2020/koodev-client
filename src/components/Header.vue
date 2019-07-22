@@ -1,5 +1,15 @@
 <template>
   <div>
+    <span class="alert">
+      <v-alert
+        v-model="alerts.success.hasSucceed"
+        dismissible
+        type="success"
+        transition="scale-transition"
+      >
+        {{alerts.success.message}}
+      </v-alert>
+    </span>
     <v-toolbar app>
       <router-link to="/">
         <img src="../assets/logo.png" height="130" alt />
@@ -11,14 +21,14 @@
       <v-spacer></v-spacer>
       <div v-show="hasLogged" class="row hidden-xs-only">
         <v-list-tile-avatar>
-          <img class="elevation-6" src="https://api.adorable.io/avatars/40/abott@adorable.png"/>
+          <img class="elevation-6" :src="'https://api.adorable.io/avatars/40/' + email +'png'"/>
         </v-list-tile-avatar>
-        <router-link to="/home" class="subheading links">{{me.firstName}}&nbsp;{{me.lastName}}</router-link>
+        <router-link to="/home" class="subheading links">{{firstName}}&nbsp;{{lastName}}</router-link>
         <v-btn color="primary" @click="logout">logout</v-btn>
       </div>
       <div v-show="!hasLogged" class="hidden-xs-only">
         <div>
-          <register-modal></register-modal>
+          <register-modal @success="registerSucceed"></register-modal>
           <login-modal @logged="logged"></login-modal>
         </div>
       </div>
@@ -29,7 +39,7 @@
         <v-list v-show="hasLogged" class="column">
           <img class="elevation-6" src="https://api.adorable.io/avatars/40/abott@adorable.png" style="border-radius: 50%"/>
           <v-list-tile>
-            <router-link to="/home" class="subheading links">{{me.firstName}}&nbsp;{{me.lastName}}</router-link>
+            <router-link to="/home" class="subheading links">{{firstName}}&nbsp;{{lastName}}</router-link>
           </v-list-tile>
           <v-list-tile>
             <v-btn color="primary" @click="logout">logout</v-btn>
@@ -37,7 +47,7 @@
         </v-list>
         <v-list v-show="!hasLogged">
           <v-list-tile>
-            <register-modal></register-modal>
+            <register-modal @success="registerSucceed"></register-modal>
           </v-list-tile>
           <v-list-tile>
             <login-modal @logged="logged"></login-modal>
@@ -49,10 +59,11 @@
 </template>
 
 <script>
-import jwt from 'jsonwebtoken'
+import { mapState, mapGetters } from 'vuex'
 import LoginModal from '@/components/LoginModal.vue'
 import RegisterModal from '@/components/RegisterModal.vue'
 import CURRENT_USER_QUERY from '@/graphql/Me.gql'
+import { onLogout } from '../apollo'
 
 export default {
   name: 'Header',
@@ -64,12 +75,6 @@ export default {
     me: {
       // GraphQL Query
       query: CURRENT_USER_QUERY,
-      // Reactive variables
-      variables () {
-        return {
-          id: this.payloadId
-        }
-      },
       update: data => data.me,
       // Disable the query
       skip () {
@@ -79,42 +84,60 @@ export default {
   },
   data () {
     return {
-      token: '',
-      decoded: '',
-      payloadId: '',
-      me: {
-        firstName: '',
-        lastName: ''
-      },
       skipQuery: true,
-      hasLogged: false
+      alerts: {
+        success: {
+          hasSucceed: false,
+          message: ''
+        },
+        error: {
+          hasError: false,
+          message: ''
+        }
+      }
     }
   },
-  mounted () {
-    this.init()
-  },
-  updated () {
-    this.init()
+  computed: {
+    ...mapState([
+      'currentUser',
+      'hasLogged',
+      'isLoading',
+      'token'
+    ]),
+    ...mapGetters([
+      'firstName',
+      'lastName',
+      'email'
+    ])
   },
   methods: {
-    logged (value) {
-      this.hasLogged = value
+    logged () {
+      this.skipQuery = false
     },
     logout () {
       localStorage.clear()
-      this.hasLogged = false
+      const apolloClient = this.$apollo.provider.defaultClient
+      onLogout(apolloClient)
+      this.$store.commit('logout')
+      this.skipQuery = true
       this.$router.push('/')
     },
-    init () {
-      if (!this.token) {
-        this.token = localStorage.getItem('authorization')
-        this.decoded = jwt.decode(this.token)
-        if (this.decoded) {
-          this.payloadId = this.decoded.user.id
-          console.log(this.payloadId, typeof this.payloadId)
-          this.skipQuery = false
-        }
+    registerSucceed (value) {
+      this.alerts.success.hasSucceed = value
+      if (value) {
+        this.alerts.success.message = '¡Usuario registrado con éxito!'
       }
+    },
+    setCurrentUser () {
+      if (this.token && this.me) {
+        console.log('Setting currentUser: ', this.me)
+        this.$store.commit('getCurrentUser', this.me)
+      }
+    }
+  },
+  watch: {
+    me: function () {
+      this.setCurrentUser()
     }
   }
 }
@@ -133,5 +156,11 @@ export default {
 .links {
   text-decoration: none;
   color: #2d2d2d;
+}
+.alert {
+  position: fixed;
+  right: 4%;
+  top: 4%;
+  z-index: 9999
 }
 </style>
