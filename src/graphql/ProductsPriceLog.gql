@@ -1,0 +1,22 @@
+{
+  getAllPricesLogs {
+    id
+    price
+    createdAt
+    product {
+      id
+      price
+      createdAt
+    }
+  }
+
+  getAllProducts {
+    id
+    name
+    brand
+    content
+    unit
+    price
+    createdAt
+  }
+}

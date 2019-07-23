@@ -1,0 +1,16 @@
+{
+  getAllProducts {
+    id
+    name
+    brand
+    content
+    unit
+    price
+    createdAt
+    updatedAt
+    type {
+      id
+      name
+    }
+  }
+}

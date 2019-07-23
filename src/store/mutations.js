@@ -1,5 +1,5 @@
 export default {
-  getCurrentUser (state, payload) {
+  setCurrentUser (state, payload) {
     state.currentUser = payload
   },
   setToken (state, payload) {

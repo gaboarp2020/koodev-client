@@ -91,6 +91,7 @@ export default {
   methods: {
     login () {
       if (this.$refs.form.validate()) {
+        this.$refs.form.resetValidation()
         this.$store.commit('loading')
         this.loginValidationQuery()
       }

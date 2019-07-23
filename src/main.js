@@ -1,6 +1,6 @@
 import '@mdi/font/css/materialdesignicons.css'
 import Vue from 'vue'
-import './plugins/vuetify'
+import './plugins'
 import App from './App.vue'
 import { sync } from 'vuex-router-sync'
 import { createRouter } from './router'

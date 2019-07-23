@@ -37,7 +37,7 @@
           <v-toolbar-side-icon v-on="on" class="hidden-sm-and-up"></v-toolbar-side-icon>
         </template>
         <v-list v-show="hasLogged" class="column">
-          <img class="elevation-6" src="https://api.adorable.io/avatars/40/abott@adorable.png" style="border-radius: 50%"/>
+          <img class="elevation-6" :src="'https://api.adorable.io/avatars/40/' + email +'png'" style="border-radius: 50%"/>
           <v-list-tile>
             <router-link to="/home" class="subheading links">{{firstName}}&nbsp;{{lastName}}</router-link>
           </v-list-tile>
@@ -84,6 +84,7 @@ export default {
   },
   data () {
     return {
+      me: null,
       skipQuery: true,
       alerts: {
         success: {
@@ -131,8 +132,27 @@ export default {
     setCurrentUser () {
       if (this.token && this.me) {
         console.log('Setting currentUser: ', this.me)
-        this.$store.commit('getCurrentUser', this.me)
+        this.$store.commit('setCurrentUser', this.me)
       }
+    }
+  },
+  mounted () {
+    const vuexToken = this.token
+    const localToken = localStorage.getItem('Authorization')
+    const currentUser = this.me > 0
+
+    if (vuexToken !== localToken) {
+      const tokenWithBearer = localToken
+      const token = tokenWithBearer.split(' ')[1]
+      vuexToken > localToken ? localStorage.setItem('Authorization', 'Bearer ' + vuexToken)
+        : this.$store.commit('setToken', token)
+    }
+
+    if ((vuexToken || localToken) && !currentUser) {
+      this.skipQuery = false
+      console.log('Setting user...')
+      this.setCurrentUser()
+      this.$store.commit('login')
     }
   },
   watch: {
