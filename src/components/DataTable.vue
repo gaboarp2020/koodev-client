@@ -21,7 +21,7 @@ export default {
   apollo: {
     getAllProducts: {
       query: ALL_PRODUCTS_QUERY,
-      //   update: (data) => data.getAllProducts,
+      update: (data) => data.getAllProducts,
       result ({ data, loading, error }) {
         if (!loading && !error && data) {
           this.products = this.buildDataTable(data)
@@ -59,9 +59,11 @@ export default {
   methods: {
     buildDataTable (data) {
       let productsData = data.getAllProducts
+      console.log('productsData: ' + data.getAllProducts)
       let products = []
       let product = {}
 
+      console.log('Iteraciones: ' + productsData.length)
       for (let i = 0; i < productsData.length; i++) {
         product.name = productsData[i].name
         product.brand = productsData[i].brand
@@ -70,10 +72,11 @@ export default {
         product.price = productsData[i].price
         product.type = productsData[i].type.name
         products.push(product)
+        console.log('product: ' + product)
         product = {}
       }
 
-      console.log('Productos: ' + products)
+      console.log('products: ' + products)
 
       return products
     }
