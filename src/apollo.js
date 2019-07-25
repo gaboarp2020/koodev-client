@@ -2,6 +2,7 @@
 import Vue from 'vue'
 import VueApollo from 'vue-apollo'
 import { createApolloClient } from 'vue-cli-plugin-apollo/graphql-client'
+import CURRENT_USER_QUERY from '@/graphql/Me.gql'
 
 // Install the vue plugin
 Vue.use(VueApollo)
@@ -93,6 +94,25 @@ export async function onLogout (apolloClient) {
   } catch (e) {
     if (!isUnauthorizedError(e)) {
       console.log('%cError on cache reset (logout)', 'color: orange;', e.message)
+    }
+  }
+}
+
+export async function getCurrentUser (apolloClient) {
+  try {
+    console.log(apolloClient)
+    await apolloClient.query({
+      query: CURRENT_USER_QUERY
+    })
+      .then(data => {
+        return data.me
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  } catch (e) {
+    if (!isUnauthorizedError(e)) {
+      console.log('%cError on current user query', 'color: orange;', e.message)
     }
   }
 }

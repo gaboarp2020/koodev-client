@@ -1,0 +1,13 @@
+query getAdmin($username: String!, $password: String!) {
+  getAdmin(username: $username, password: $password) {
+    id
+    firstName
+    lastName
+    username
+    password
+    email
+    isAdmin
+    createdAt
+    updatedAt
+  }
+}

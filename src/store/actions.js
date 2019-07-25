@@ -1,4 +1,13 @@
+import { getCurrentUser } from '../apollo'
 
 export default {
-  // Actions
+  loginValidation ({
+    commit
+  }, userData) {
+    return new Promise((resolve, reject) => {
+      const user = getCurrentUser()
+      commit('setCurrentUser', user)
+      resolve(user)
+    })
+  }
 }

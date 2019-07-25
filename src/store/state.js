@@ -1,6 +1,6 @@
 export default {
   currentUser: null,
-  token: '',
+  token: localStorage.getItem('token') || '',
   hasLogged: false,
   isLoading: false
 }

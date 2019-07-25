@@ -1,17 +1,18 @@
 <template>
-  <div>
-    <v-data-table
-      v-if="loaded"
-      :headers="headers"
-      :items="products"
-      :items-per-page="5"
-      class="elevation-1"
-    ></v-data-table>
-
-    <div class="text-xs-center" v-if="!loaded">
-      <v-progress-circular :size="70" :width="7" color="primary" indeterminate></v-progress-circular>
-    </div>
-  </div>
+  <v-data-table
+    :headers="headers"
+    :items="products"
+    class="elevation-1"
+  >
+    <template v-slot:items="props">
+      <td>{{ props.item.name }}</td>
+      <td class="text-xs-left">{{ props.item.brand }}</td>
+      <td class="text-xs-center">{{ props.item.content }}</td>
+      <td class="text-xs-center">{{ props.item.unit }}</td>
+      <td class="text-xs-center">{{ props.item.price }}</td>
+      <td class="text-xs-left">{{ props.item.type }}</td>
+    </template>
+  </v-data-table>
 </template>
 
 <script>
@@ -41,7 +42,7 @@ export default {
       name: 'DataTable',
       headers: [
         {
-          text: 'Productos',
+          text: 'Producto',
           align: 'left',
           sortable: false,
           value: 'name'
@@ -69,7 +70,7 @@ export default {
         product.brand = productsData[i].brand
         product.content = productsData[i].content
         product.unit = productsData[i].unit
-        product.price = productsData[i].price
+        product.price = new Intl.NumberFormat('de-DE').format(productsData[i].price)
         product.type = productsData[i].type.name
         products.push(product)
         console.log('product: ' + product)

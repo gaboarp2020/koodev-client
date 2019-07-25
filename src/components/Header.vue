@@ -141,7 +141,7 @@ export default {
     const localToken = localStorage.getItem('Authorization')
     const currentUser = this.me > 0
 
-    if (vuexToken !== localToken) {
+    if (vuexToken !== localToken && localToken) {
       const tokenWithBearer = localToken
       const token = tokenWithBearer.split(' ')[1]
       vuexToken > localToken ? localStorage.setItem('Authorization', 'Bearer ' + vuexToken)

@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app id="inspire">
     <Header></Header>
 
     <v-content>
@@ -27,6 +27,8 @@ export default {
 </script>
 
 <style>
+@import url('./styles/fonts.css');
+@import url('./styles/material-icons.css');
 
 html {
   scroll-behavior: smooth;
