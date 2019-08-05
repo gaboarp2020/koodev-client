@@ -1,13 +1,24 @@
-import { getCurrentUser } from '../apollo'
+import {
+  apolloClient
+} from '../apollo'
+import CURRENT_USER_QUERY from '@/graphql/Me.gql'
 
 export default {
-  loginValidation ({
+  async loginValidation ({
     commit
   }, userData) {
-    return new Promise((resolve, reject) => {
-      const user = getCurrentUser()
-      commit('setCurrentUser', user)
-      resolve(user)
+    return apolloClient.query({
+      query: CURRENT_USER_QUERY
     })
+      .then(data => {
+        const user = data.data.me
+        commit('setCurrentUser', user)
+        commit('login')
+        console.log(user)
+      })
+      .catch(error => {
+        console.log(error)
+      })
   }
+
 }

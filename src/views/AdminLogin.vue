@@ -48,13 +48,7 @@
       :vertical="true"
     >
       {{ alerts.admin.message }}
-      <v-btn
-        dark
-        flat
-        @click="alerts.admin.hasError = false"
-      >
-        Close
-      </v-btn>
+      <v-btn dark flat @click="alerts.admin.hasError = false">Close</v-btn>
     </v-snackbar>
   </v-container>
 </template>
@@ -63,7 +57,6 @@
 import { mapState } from 'vuex'
 import VALIDATE_ADMIN_QUERY from '@/graphql/ValidateAdmin.gql'
 import VALIDATE_USER_MUTATION from '../graphql/ValidateUser.gql'
-import { onLogin } from '@/apollo'
 
 export default {
   data () {
@@ -119,58 +112,60 @@ export default {
       this.clear()
 
       // Apollo GraphQl Query
-      this.$apollo.query({
-        query: VALIDATE_ADMIN_QUERY,
-        variables: {
-          username,
-          password
-        },
-        error (error) {
-          console.log(error)
-        }
-      }).then(data => {
-        console.log(data)
+      this.$apollo
+        .query({
+          query: VALIDATE_ADMIN_QUERY,
+          variables: {
+            username,
+            password
+          },
+          error (error) {
+            console.log(error)
+          }
+        })
+        .then(data => {
+          console.log(data)
 
-        const user = data.data.getAdmin
-        this.$store.commit('setCurrentUser', user)
-        console.log(user)
-        if (user.isAdmin) {
-          this.$apollo
-            .mutate({
-              mutation: VALIDATE_USER_MUTATION,
-              variables: { username, password }
-            })
-            .then(data => {
-              // Result
-              onLogin()
-              this.$store.commit('done')
+          const user = data.data.getAdmin
+          this.$store.commit('setCurrentUser', user)
+          console.log(user)
+          if (user.isAdmin) {
+            this.$apollo
+              .mutate({
+                mutation: VALIDATE_USER_MUTATION,
+                variables: { username, password }
+              })
+              .then(data => {
+                // Result
+                let token = data.data.validateUser
 
-              let token = data.data.validateUser
-              localStorage.setItem('Authorization', 'Bearer ' + token)
+                this.$store.commit('done')
 
-              this.$store.commit('setToken', token)
+                localStorage.setItem('Authorization', 'Bearer ' + token)
 
-              this.$store.commit('login')
-              this.dialog = false
-              this.$emit('logged')
-              this.$router.push('/admin')
-            })
-            .catch(error => {
-              // Error
-              console.log(error)
-              this.$store.commit('done')
+                this.$store.commit('setToken', token)
 
-              // We restore the initial user input
-              this.$data.form = {
-                username,
-                password
-              }
-            })
-        } else {
-          this.alerts.admin.hasError = true
-        }
-        // Apollo GraphQl Mutations (return token)
-      })
+                this.$store.commit('login')
+                this.dialog = false
+                this.$emit('logged')
+                this.$router.push('/admin')
+              })
+              .catch(error => {
+                // Error
+                console.log(error)
+                this.$store.commit('done')
+
+                // We restore the initial user input
+                this.$data.form = {
+                  username,
+                  password
+                }
+              })
+          } else {
+            this.alerts.admin.hasError = true
+          }
+          // Apollo GraphQl Mutations (return token)
+        })
         .catch(error => {
           // Error
           console.log(error)

@@ -6,9 +6,7 @@
         dismissible
         type="success"
         transition="scale-transition"
-      >
-        {{alerts.success.message}}
-      </v-alert>
+      >{{alerts.success.message}}</v-alert>
     </span>
     <v-toolbar app>
       <router-link to="/">
@@ -21,7 +19,7 @@
       <v-spacer></v-spacer>
       <div v-show="hasLogged" class="row hidden-xs-only">
         <v-list-tile-avatar>
-          <img class="elevation-6" :src="'https://api.adorable.io/avatars/40/' + email +'png'"/>
+          <img class="elevation-6" :src="'https://api.adorable.io/avatars/40/' + email +'png'" />
         </v-list-tile-avatar>
         <router-link to="/home" class="subheading links">{{firstName}}&nbsp;{{lastName}}</router-link>
         <v-btn color="primary" @click="logout">logout</v-btn>
@@ -37,7 +35,11 @@
           <v-toolbar-side-icon v-on="on" class="hidden-sm-and-up"></v-toolbar-side-icon>
         </template>
         <v-list v-show="hasLogged" class="column">
-          <img class="elevation-6" :src="'https://api.adorable.io/avatars/40/' + email +'png'" style="border-radius: 50%"/>
+          <img
+            class="elevation-6"
+            :src="'https://api.adorable.io/avatars/40/' + email +'png'"
+            style="border-radius: 50%"
+          />
           <v-list-tile>
             <router-link to="/home" class="subheading links">{{firstName}}&nbsp;{{lastName}}</router-link>
           </v-list-tile>
@@ -63,7 +65,7 @@ import { mapState, mapGetters } from 'vuex'
 import LoginModal from '@/components/LoginModal.vue'
 import RegisterModal from '@/components/RegisterModal.vue'
 import CURRENT_USER_QUERY from '@/graphql/Me.gql'
-import { onLogout } from '../apollo'
+import { apolloClient, onLogout } from '../apollo'
 
 export default {
   name: 'Header',
@@ -99,17 +101,8 @@ export default {
     }
   },
   computed: {
-    ...mapState([
-      'currentUser',
-      'hasLogged',
-      'isLoading',
-      'token'
-    ]),
-    ...mapGetters([
-      'firstName',
-      'lastName',
-      'email'
-    ])
+    ...mapState(['currentUser', 'hasLogged', 'isLoading', 'token']),
+    ...mapGetters(['firstName', 'lastName', 'email'])
   },
   methods: {
     logged () {
@@ -117,7 +110,6 @@ export default {
     },
     logout () {
       localStorage.clear()
-      const apolloClient = this.$apollo.provider.defaultClient
       onLogout(apolloClient)
       this.$store.commit('logout')
       this.skipQuery = true
@@ -144,7 +136,8 @@ export default {
     if (vuexToken !== localToken && localToken) {
       const tokenWithBearer = localToken
       const token = tokenWithBearer.split(' ')[1]
-      vuexToken > localToken ? localStorage.setItem('Authorization', 'Bearer ' + vuexToken)
+      vuexToken > localToken
+        ? localStorage.setItem('Authorization', 'Bearer ' + vuexToken)
         : this.$store.commit('setToken', token)
     }
 
@@ -181,6 +174,6 @@ export default {
   position: fixed;
   right: 4%;
   top: 4%;
-  z-index: 9999
+  z-index: 9999;
 }
 </style>

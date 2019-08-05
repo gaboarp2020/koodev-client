@@ -52,7 +52,6 @@
 <script>
 import { mapState } from 'vuex'
 import VALIDATE_USER_MUTATION from '../graphql/ValidateUser.gql'
-import { onLogin } from '../apollo'
 
 export default {
   data () {
@@ -84,9 +83,7 @@ export default {
     }
   },
   computed: {
-    ...mapState([
-      'isLoading'
-    ])
+    ...mapState(['isLoading'])
   },
   methods: {
     login () {
@@ -112,10 +109,10 @@ export default {
         })
         .then(data => {
           // Result
-          onLogin()
+          let token = data.data.validateUser
+
           this.$store.commit('done')
 
-          let token = data.data.validateUser
           localStorage.setItem('Authorization', 'Bearer ' + token)
 
           this.$store.commit('setToken', token)

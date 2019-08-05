@@ -1,8 +1,9 @@
 /* eslint-disable no-new */
 import Vue from 'vue'
 import VueApollo from 'vue-apollo'
-import { createApolloClient } from 'vue-cli-plugin-apollo/graphql-client'
-import CURRENT_USER_QUERY from '@/graphql/Me.gql'
+import {
+  createApolloClient
+} from 'vue-cli-plugin-apollo/graphql-client'
 
 // Install the vue plugin
 Vue.use(VueApollo)
@@ -38,10 +39,17 @@ const defaultOptions = {
   }
 }
 
+// ApolloClient
+export const apolloClient = createApolloClient(defaultOptions).apolloClient
+
 // Call this in the Vue app file
-export function createProvider (options = {}, { router }) {
+export function createProvider (options = {}, {
+  router
+}) {
   // Create apollo client
-  const { apolloClient } = createApolloClient({
+  const {
+    apolloClient
+  } = createApolloClient({
     ...defaultOptions,
     ...options
   })
@@ -74,18 +82,6 @@ export function createProvider (options = {}, { router }) {
   return apolloProvider
 }
 
-// Manually call this when user log in
-export async function onLogin (apolloClient, token) {
-  localStorage.setItem(AUTH_TOKEN, JSON.stringify(token))
-  try {
-    await apolloClient.resetStore()
-  } catch (e) {
-    if (!isUnauthorizedError(e)) {
-      console.log('%cError on cache reset (login)', 'color: orange;', e.message)
-    }
-  }
-}
-
 // Manually call this when user log out
 export async function onLogout (apolloClient) {
   localStorage.removeItem(AUTH_TOKEN)
@@ -98,26 +94,9 @@ export async function onLogout (apolloClient) {
   }
 }
 
-export async function getCurrentUser (apolloClient) {
-  try {
-    console.log(apolloClient)
-    await apolloClient.query({
-      query: CURRENT_USER_QUERY
-    })
-      .then(data => {
-        return data.me
-      })
-      .catch(error => {
-        console.log(error)
-      })
-  } catch (e) {
-    if (!isUnauthorizedError(e)) {
-      console.log('%cError on current user query', 'color: orange;', e.message)
-    }
-  }
-}
-
 function isUnauthorizedError (error) {
-  const { graphQLErrors } = error
+  const {
+    graphQLErrors
+  } = error
   return (graphQLErrors && graphQLErrors.some(e => e.message === 'Unauthorized'))
 }

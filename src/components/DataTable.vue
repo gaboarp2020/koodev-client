@@ -7,9 +7,9 @@
     <template v-slot:items="props">
       <td>{{ props.item.name }}</td>
       <td class="text-xs-left">{{ props.item.brand }}</td>
-      <td class="text-xs-center">{{ props.item.content }}</td>
-      <td class="text-xs-center">{{ props.item.unit }}</td>
-      <td class="text-xs-center">{{ props.item.price }}</td>
+      <td class="text-xs-left">{{ props.item.content }}</td>
+      <td class="text-xs-left">{{ props.item.unit }}</td>
+      <td class="text-xs-left">{{ props.item.price }}</td>
       <td class="text-xs-left">{{ props.item.type }}</td>
     </template>
   </v-data-table>

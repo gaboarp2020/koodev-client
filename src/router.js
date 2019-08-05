@@ -9,7 +9,9 @@ import Admin from './views/Admin.vue'
 import PageNotFound from './views/PageNotFound.vue'
 
 // Vuex Store
-import { createStore } from './store'
+import {
+  createStore
+} from './store'
 
 Vue.use(Router)
 
@@ -27,7 +29,9 @@ const routes = [{
   path: '/home',
   name: 'home',
   component: Home,
-  meta: { requiresAuth: true }
+  meta: {
+    requiresAuth: true
+  }
 },
 {
   path: '/admin',
@@ -67,9 +71,11 @@ export function createRouter () {
   router.beforeEach((to, from, next) => {
     if (to.matched.some(record => record.meta.requiresAuth)) {
       const store = createStore()
-      store.dispatch('loginValidation').then((response) => {
-        const logged = !!response
+      store.dispatch('loginValidation').then(() => {
+        const logged = store.state.hasLogged
+        const user = store.state.currentUser
 
+        console.log('user: ' + user)
         console.log(logged)
         if (!logged) {
           next({
@@ -77,7 +83,7 @@ export function createRouter () {
           })
         } else {
           if (to.matched.some(record => record.meta.requiresAdmin)) {
-            const isAdmin = response.isAdmin
+            const isAdmin = user.isAdmin
             if (!isAdmin) {
               next({
                 path: '/'
