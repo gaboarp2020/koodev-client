@@ -4,6 +4,7 @@ import Router from 'vue-router'
 // Views
 import LandingPage from './views/LandingPage.vue'
 import Home from './views/Home.vue'
+import Api from './views/Api.vue'
 import AdminLogin from './views/AdminLogin.vue'
 import Admin from './views/Admin.vue'
 import PageNotFound from './views/PageNotFound.vue'
@@ -29,6 +30,14 @@ const routes = [{
   path: '/home',
   name: 'home',
   component: Home,
+  meta: {
+    requiresAuth: true
+  }
+},
+{
+  path: '/api',
+  name: 'api',
+  component: Api,
   meta: {
     requiresAuth: true
   }
